@@ -1,4 +1,4 @@
-name := "WordCountStream"
+name := "CustomReceiver"
 
 version := "1.0"
 
