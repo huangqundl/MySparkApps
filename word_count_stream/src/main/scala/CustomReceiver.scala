@@ -15,14 +15,10 @@
  * limitations under the License.
  */
 
-/*
- * qhuang: Receiver reads from a in-memory region
- *         This eliminates the possible bottleneck due to receiving channels
- *         For fair benchmark
- */
+package org.apache.spark.examples.streaming
 
-import scala.io.Source
-import scala.util.control.Breaks._
+import java.io.{InputStreamReader, BufferedReader, InputStream}
+import java.net.Socket
 
 import org.apache.spark.{SparkConf, Logging}
 import org.apache.spark.storage.StorageLevel
@@ -38,15 +34,17 @@ import org.apache.spark.streaming.receiver.Receiver
  * and then run the example
  *    `$ bin/run-example org.apache.spark.examples.streaming.CustomReceiver localhost 9999`
  */
-object WordCountStream {
+object CustomReceiver {
   def main(args: Array[String]) {
     if (args.length < 2) {
-      System.err.println("Usage: WordCountStream <filename>")
+      System.err.println("Usage: CustomReceiver <hostname> <port>")
       System.exit(1)
     }
 
+    StreamingExamples.setStreamingLogLevels()
+
     // Create the context with a 1 second batch size
-    val sparkConf = new SparkConf().setAppName("WordCountStream")
+    val sparkConf = new SparkConf().setAppName("CustomReceiver")
     val ssc = new StreamingContext(sparkConf, Seconds(1))
 
     // Create a input stream with the custom receiver on target ip:port and count the
@@ -61,27 +59,13 @@ object WordCountStream {
 }
 
 
-class CustomReceiver(filename: String, max_line: Int)
+class CustomReceiver(host: String, port: Int)
   extends Receiver[String](StorageLevel.MEMORY_AND_DISK_2) with Logging {
-
-  val line_array = new Array[String](max_line)
 
   def onStart() {
     // Start the thread that receives data over a connection
     new Thread("Socket Receiver") {
-      override def run() {
-          var num_line = 0
-          val filename = "/home/qhuang/workspace/MySparkApps/word_count_stream/input.txt"
-          for (line <- Source.fromFile(filename).getLines) {
-              line_array(num_line) = line
-              println(line);
-              num_line = num_line + 1;
-              if (num_line == max_line) {
-                  break
-              }
-          }
-          receive()
-      }
+      override def run() { receive() }
     }.start()
   }
 
@@ -92,8 +76,27 @@ class CustomReceiver(filename: String, max_line: Int)
 
   /** Create a socket connection and receive data until receiver is stopped */
   private def receive() {
-      for (i <- 0 to max_line-1) {
-          store(line_array(i))
-      } 
+   var socket: Socket = null
+   var userInput: String = null
+   try {
+     logInfo("Connecting to " + host + ":" + port)
+     socket = new Socket(host, port)
+     logInfo("Connected to " + host + ":" + port)
+     val reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"))
+     userInput = reader.readLine()
+     while(!isStopped && userInput != null) {
+       store(userInput)
+       userInput = reader.readLine()
+     }
+     reader.close()
+     socket.close()
+     logInfo("Stopped receiving")
+     restart("Trying to connect again")
+   } catch {
+     case e: java.net.ConnectException =>
+       restart("Error connecting to " + host + ":" + port, e)
+     case t: Throwable =>
+       restart("Error receiving data", t)
+   }
   }
 }
