@@ -38,17 +38,17 @@ import org.apache.spark.SparkConf
  * and then run the example
  *    `$ bin/run-example org.apache.spark.examples.streaming.CustomReceiver localhost 9999`
  */
-object WorkCountStream {
+object WordCountStream {
   def main(args: Array[String]) {
     if (args.length < 2) {
-      System.err.println("Usage: WorkCountStream <hostname> <port>")
+      System.err.println("Usage: WordCountStream <filename> <freq>")
       System.exit(1)
     }
 
     StreamingExamples.setStreamingLogLevels()
 
     // Create the context with a 1 second batch size
-    val sparkConf = new SparkConf().setAppName("WorkCountStream")
+    val sparkConf = new SparkConf().setAppName("WordCountStream")
     val ssc = new StreamingContext(sparkConf, Seconds(1))
 
     // Create a input stream with the custom receiver on target ip:port and count the
@@ -67,8 +67,11 @@ object WorkCountStream {
 }
 
 
-class CustomReceiver(host: String, port: Int)
+class CustomReceiver(filename: String, max_line: Int)
   extends Receiver[String](StorageLevel.MEMORY_AND_DISK_2) with Logging {
+
+  //val max_line = 10000
+  val line_array = new Array[String](max_line)
 
   def onStart() {
     // Start the thread that receives data over a connection
@@ -86,33 +89,32 @@ class CustomReceiver(host: String, port: Int)
 
   /** Create a socket connection and receive data until receiver is stopped */
   private def receive() {
-    val max_line = 100
-    val line_array = new Array[String](max_line)
 
     /*
-    for (i <- 0 to max_line-1) {
-        line_array(i) = "My line " + i.toString
-    }
-    */
-
-    val source = Source.fromFile("/home/qhuang/workspace/MySparkApps/word_count_stream/input.txt")
+    //val source = Source.fromFile(filename)
+    val source = Source.fromFile("/home/qhuang/dataset/word_count/input_small.txt")
     var num_line = 0
     for (line <- source.getLines) {
-        store(line);
-        /*
         line_array(num_line) = line
         num_line = num_line + 1;
-        if (num_line == max_line) {
+        if (num_line == 10) {
             break
         }
-        */
     }
-
-    /*
-    for (i <- 0 to max_line-1) {
-        store(line_array(i))
+    for (line <- source.getLines) {
+        store(line);
     }
     */
+
+    for (i <- 0 to max_line-1) {
+        line_array(i) = i.toString
+    }
+    while (true) {
+        for (i <- 0 to max_line-1) {
+            store(line_array(i))
+        }
+        Thread.sleep(1000)
+    }
   }
 }
 
