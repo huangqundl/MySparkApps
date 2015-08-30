@@ -18,6 +18,7 @@
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.storage.StorageLevel
+import com.google.common.io.Files
 
 import org.apache.spark.Logging
 import org.apache.log4j.{Level, Logger}
@@ -35,12 +36,14 @@ import org.apache.log4j.{Level, Logger}
  */
 object WordCountStream {
   def main(args: Array[String]) {
-    if (args.length < 2) {
-      System.err.println("Usage: WordCountStream <hostname> <port>")
+    if (args.length < 3) {
+      System.err.println("Usage: WordCountStream <hostname> <port> <out-path>")
       System.exit(1)
     }
 
     StreamingExamples.setStreamingLogLevels()
+    val outputFile = new File(args(2))
+    if (outputFile.exists()) outputFile.delete()
 
     // Create the context with a 1 second batch size
     val sparkConf = new SparkConf().setAppName("WordCountStream")
@@ -53,7 +56,12 @@ object WordCountStream {
     val lines = ssc.socketTextStream(args(0), args(1).toInt, StorageLevel.MEMORY_AND_DISK_SER)
     val words = lines.flatMap(_.split(" "))
     val wordCounts = words.map(x => (x, 1)).reduceByKey(_ + _)
-    wordCounts.print()
+    wordCounts.foreachRDD((rdd: RDD[(String, Int)], time: Time) => {
+      val counts = "Counts at time " + time + " " + rdd.collect().mkString("[", ", ", "]")
+      println(counts)
+      println("Appending to " + outputFile.getAbsolutePath)
+      Files.append(counts + "\n", outputFile, Charset.defaultCharset())
+    })
     ssc.start()
     ssc.awaitTermination()
   }
