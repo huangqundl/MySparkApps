@@ -15,10 +15,14 @@
  * limitations under the License.
  */
 
+import java.io.File
+import java.nio.charset.Charset
+
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.{Time, Seconds, StreamingContext}
 import org.apache.spark.storage.StorageLevel
 import com.google.common.io.Files
+import org.apache.spark.rdd.RDD
 
 import org.apache.spark.Logging
 import org.apache.log4j.{Level, Logger}
