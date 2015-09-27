@@ -12,7 +12,7 @@ if len(sys.argv) != 2:
 
 repeat = int(sys.argv[1])
 
-master = "localhost:4040"
+master = "127.0.0.1:4040"
 
 values = []
 

@@ -62,7 +62,7 @@ object WordCountStream {
     val wordCounts = words.map(x => (x, 1)).reduceByKey(_ + _)
     wordCounts.foreachRDD((rdd: RDD[(String, Int)], time: Time) => {
       val counts = "Counts at time " + time + " " + rdd.collect().mkString("[", ", ", "]")
-      println(counts)
+      //println(counts)
       println("Appending to " + outputFile.getAbsolutePath)
       Files.append(counts + "\n", outputFile, Charset.defaultCharset())
     })
