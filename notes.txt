@@ -1,0 +1,6 @@
+We have various implementations
+
+Current implementation has the following features
+  1. read from multiple tcp sources
+  2. enable state checkpointing
+  3. adjust mini-batch interval from argument

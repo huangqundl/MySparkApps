@@ -1,0 +1,23 @@
+[0m[[0minfo[0m] [0mPackaging /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/wordcountstream_2.10-1.0.jar ...[0m
+[0m[[0mdebug[0m] [0mInput file mappings:[0m
+[0m[[0mdebug[0m] [0m	WordCountStream$$anonfun$3.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/WordCountStream$$anonfun$3.class[0m
+[0m[[0mdebug[0m] [0m	StreamingExamples$.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/StreamingExamples$.class[0m
+[0m[[0mdebug[0m] [0m	WordCountStream$$anonfun$main$1.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/WordCountStream$$anonfun$main$1.class[0m
+[0m[[0mdebug[0m] [0m	WordCountStream.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/WordCountStream.class[0m
+[0m[[0mdebug[0m] [0m	StreamingExamples.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/StreamingExamples.class[0m
+[0m[[0mdebug[0m] [0m	WordCountStream$$anonfun$1.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/WordCountStream$$anonfun$1.class[0m
+[0m[[0mdebug[0m] [0m	WordCountStream$.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/WordCountStream$.class[0m
+[0m[[0mdebug[0m] [0m	WordCountStream$$anonfun$4.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/WordCountStream$$anonfun$4.class[0m
+[0m[[0mdebug[0m] [0m	WordCountStream$$anonfun$2.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/WordCountStream$$anonfun$2.class[0m
+[0m[[0mdebug[0m] [0m	StreamingExamples$$anonfun$setStreamingLogLevels$1.class[0m
+[0m[[0mdebug[0m] [0m	  /home/qhuang/workspace/MySparkApps/word_count_stream_net_new/target/scala-2.10/classes/StreamingExamples$$anonfun$setStreamingLogLevels$1.class[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
